@@ -31,18 +31,41 @@
         text-align: center;
         width: 100%;
       }
+.toast {
+    position: fixed; /* 固定定位 */
+    bottom: 20px; /* 距离底部20px */
+    left: 50%; /* 向左50% */
+    transform: translateX(-50%); /* 水平居中 */
+    background-color: #333; /* 背景颜色 */
+    color: #fff; /* 文字颜色 */
+    padding: 10px 20px; /* 内边距 */
+    border-radius: 5px; /* 边框圆角 */
+    opacity: 0; /* 初始透明度 */
+    transition: opacity 0.5s; /* 透明度变化动画 */
+    z-index: 1000; /* 确保提示框在最上层 */
+}
+
+.toast.visible {
+    opacity: 1; /* 可见时的透明度 */
+}
     </style>
     <script src="https://yidunfe.nosdn.127.net/sdk/NEOneLogin.v3.1.1.umd.js"></script>
   </head>
   <body>
     <div id="root">
       <button id="get-token-btn">调起授权页</button>
+   <div id="toast" class="toast hidden">这是一条提示信息！</div>
+  <div class="toast-body">
+    Toast通知内容
+  </div>
+</div>
 
     </div>
 
     <script>
       (function () {
         const popupContainer = document.querySelector('#popup-container');
+          var toast = document.getElementById('toast');
         const neOneLogin = new NEOneLogin({
           businessId: '854af4f71c424bd88a3a20dcc4fb3f77',
           mode: 'popup',
@@ -88,11 +111,20 @@
 
 
         document.querySelector('#get-token-btn').onclick = () => {
-
+ 
           neOneLogin.getToken();
 
         };
 
+function showToast(message) {
+  const toast = document.getElementById('toast');
+  toast.classList.add('show');
+  toast.querySelector('.toast-body').textContent = message;
+  
+  setTimeout(() => {
+    toast.classList.remove('show');
+  }, 3000); // 3秒后隐藏Toast
+};
 
     neOneLogin.on('close', () => {
    console.log('close被点击');
@@ -100,6 +132,16 @@
 
           neOneLogin.on('switch', () => {
   console.log('switch被点击');
+          toast.classList.remove('hidden');
+        toast.classList.add('visible');
+
+        // 3秒后隐藏提示框
+        setTimeout(function () {
+            toast.classList.remove('visible');
+            toast.classList.add('hidden');
+        }, 3000);
+  
+                 console.log('通知');
 });
 
           neOneLogin.on('success', (data) => {
