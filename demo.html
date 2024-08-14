@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, viewport-fit=cover"/>
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <meta content="always" name="referrer"/>
+    <title>一键登录H5 - demo</title>
+    <style>
+      #get-token-btn {
+        position: fixed;
+        left: 10px;
+        top: 10px;
+      }
+      #popup-container {
+        position: fixed;
+        left: 50%;
+        top: 50%;
+        width: 90%;
+        height: 400px;
+        transform: translate(-50%, -50%);
+        border-radius: 20px;
+        box-shadow: rgb(0 0 0 / 10%) 0px 4px 12px;
+      }
+      .title {
+        text-align: center;
+        margin-top: 30px;
+      }
+      .sub-title {
+        display: inline-block;
+        text-align: center;
+        width: 100%;
+      }
+    </style>
+    <script src="https://yidunfe.nosdn.127.net/sdk/NEOneLogin.v3.1.1.umd.js"></script>
+  </head>
+  <body>
+    <div id="root">
+      <button id="get-token-btn">调起授权页</button>
+
+    </div>
+
+    <script>
+      (function () {
+        const popupContainer = document.querySelector('#popup-container');
+        const neOneLogin = new NEOneLogin({
+          businessId: '854af4f71c424bd88a3a20dcc4fb3f77',
+          mode: 'popup',
+          popupContainer,
+          phoneInputStyle: 'square',
+          // 只渲染 4 个模块，其它的自定义
+          elements: ['phone', 'switchButton', 'loginButton', 'policy'],
+          logoStyles: {
+            top: 10,
+          },
+          sloganAppName: '网易易盾',
+          sloganStyles: {
+            top: 10,
+          },
+          phoneStyles: {
+            top: 20,
+          },
+          switchBtnText: '切换手机号',
+          loginBtnText: '授权登录',
+          loginBtnStyles: {
+            top: 20,
+          },
+          policy: [
+            {
+              content: '自定义条款1',
+              url: 'https://www.baidu.com',
+            },
+            {
+              content: '自定义条款',
+              url: 'https://www.baidu.com',
+            },
+          ],
+          policyStyles: {
+            top: 20,
+          },
+          iframeStyles: {
+            position: 'absolute',
+            left: '0',
+            bottom: '0',
+            height: '274px',
+          },
+        });
+
+
+        document.querySelector('#get-token-btn').onclick = () => {
+
+          neOneLogin.getToken();
+
+        };
+
+
+    neOneLogin.on('close', () => {
+   console.log('close被点击');
+});
+
+          neOneLogin.on('switch', () => {
+  console.log('switch被点击');
+});
+
+          neOneLogin.on('success', (data) => {
+  console.log('success', data);
+  ajax({
+    url: 'http://121.196.246.246/demo.html',
+    data: {
+      token: data.token,
+      accessToken: data.accessToken,
+    },
+  });
+});
+      })();
+    </script>
+  </body>
+</html>
