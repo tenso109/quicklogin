@@ -132,6 +132,7 @@ function showToast(message) {
 
           neOneLogin.on('switch', () => {
   console.log('switch被点击');
+
           toast.classList.remove('hidden');
         toast.classList.add('visible');
 
@@ -143,6 +144,42 @@ function showToast(message) {
   
                  console.log('通知');
 });
+
+          neOneLogin.on('error', (err) => {
+  // err.data 中可以拿到错误信息
+  console.log('error', err.data);
+    toast.textContent = err.data;
+toast.classList.remove('hidden');
+        toast.classList.add('visible');
+
+        // 3秒后隐藏提示框
+        setTimeout(function () {
+            toast.classList.remove('visible');
+            toast.classList.add('hidden');
+        }, 3000);
+
+
+  neOneLogin.dispose();
+  neOneLogin = null;
+
+});
+neOneLogin.on('tip', ({ code, text }) => {
+ 
+
+    toast.textContent = code+text;
+toast.classList.remove('hidden');
+        toast.classList.add('visible');
+
+        // 3秒后隐藏提示框
+        setTimeout(function () {
+            toast.classList.remove('visible');
+            toast.classList.add('hidden');
+        }, 3000);
+
+});
+
+
+
 
           neOneLogin.on('success', (data) => {
   console.log('success', data);
